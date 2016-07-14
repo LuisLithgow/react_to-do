@@ -1,11 +1,13 @@
 'use strict'
 const express = require('express');
 const tasks = require('express').Router();
-// const sendJSONresp =
+const taskModel = require('../models/task')
 
-let taskArray = [];
+// let taskArray = [];\
+// const sendJSONresp = (req,res)=>res.json()
 
-tasks.route('/:id' )
+
+tasks.route('/:taskID')
     .get((req,res)=>res.send(`showed task ${req.params.id}`))
     .put((req,res)=>res.send(`edited task ${req.params.id}`))
     // used PUT to post a specific id
