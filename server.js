@@ -19,19 +19,6 @@ app.get('/', (req, res)=>{
 app.use('/tasks', tasksRoute );
 
 
-// app.use('/tasks/:id', tasksRoute )
-
-// tasksRoute.route('/tasks/:id' )
-//     .get((req,res)=>res.send(`showed task ${req.params.id}`))
-//     .put((req,res)=>res.send(`edited task ${req.params.id}`))
-//     // used PUT to post a specific id
-//     .delete((req,res)=>res.send(`deleted task ${req.params.id} `))
-
-// tasksRoute.route('/tasks' )
-//     .get((req,res)=>res.send('show tasks'))
-//     .post((req,res)=>res.send('posted new task'))
-
-
 
 app.listen(PORT, ()=>{
   console.log('Listening to server on port ' + PORT)

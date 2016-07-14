@@ -8,7 +8,7 @@ You will need to keep a record all task orders. A task can
 have
 
   1. task_id
-  2. task_name
+  2. task_name 
   3. task_desc
   4. completed
   5. task_time_start
