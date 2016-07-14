@@ -6,25 +6,30 @@ const app = express();
 const PORT = process.env.PORT || 3009;
 
 // const homeRoute = require('');
-// const taskRoute = require('./routes/tasks');
+const tasksRoute = require('./routes/tasks');
 
 // app.use(express.static(path.join(__dirname, 'dist')));
 
-app.use(logger('dev'))
+app.use(logger('dev'));
 
 app.get('/', (req, res)=>{
-  res.send("HOME PAGE")
+  res.send("HOME PAGE");
 })
 
-app.route('/tasks/:id' )
-    .get((req,res)=>res.send(`showed task ${req.params.id}`))
-    .put((req,res)=>res.send(`edited task ${req.params.id}`))
-    // used PUT to post a specific id
-    .delete((req,res)=>res.send(`deleted task ${req.params.id} `))
+app.use('/tasks', tasksRoute );
 
-app.route('/tasks' )
-    .get((req,res)=>res.send('show tasks'))
-    .post((req,res)=>res.send('posted new task'))
+
+// app.use('/tasks/:id', tasksRoute )
+
+// tasksRoute.route('/tasks/:id' )
+//     .get((req,res)=>res.send(`showed task ${req.params.id}`))
+//     .put((req,res)=>res.send(`edited task ${req.params.id}`))
+//     // used PUT to post a specific id
+//     .delete((req,res)=>res.send(`deleted task ${req.params.id} `))
+
+// tasksRoute.route('/tasks' )
+//     .get((req,res)=>res.send('show tasks'))
+//     .post((req,res)=>res.send('posted new task'))
 
 
 
