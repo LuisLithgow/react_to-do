@@ -26,11 +26,11 @@ module.exports = {
 
 // POST /tasks
 // Creates a new task, returns the newly created record
-  addTasks(req, res, next) {
+  addTask(req, res, next) {
     console.log('===', req.body)
     _db.any(
       `INSERT INTO
-      tasks (task_name, task_desc)
+      tasks(task_name, task_desc)
       VALUES ($/name/, $/desc/)
       returning *;`, req.body
     )
@@ -45,21 +45,18 @@ module.exports = {
   },
 
   // PUT /tasks/:id
-  updateTask(req, res){
+  updateTask(req, res, next){
     // tID is invented here
     req.body.tID = Number.parseInt(req.params.taskID);
-
     req.body.completed = !!req.body.conpleted;
 
-    _db.one(
+    _db.any(
       `UPDATE tasks SET
-      task_name = $/task_name/,
-      task_desc = $/task_desc/,
-      completed = $/completed/,
-      task_time_start = $/task_time_start/,
-      task_time_end = $/task_time_end/
+      task_name=$/name/,
+      task_desc=$/desc/,
+      completed=$/completed/
       WHERE task_id = $/tID/
-      returnng  * ; `,
+      returning  * ; `,
       req.body)
     .then( task=>{
         console.log('Added Updated successfully');
@@ -71,13 +68,12 @@ module.exports = {
     })
   },
 
-
   // DELETE /tasks/:id
   deleteTask(req,res,next) {
     const tID = Number.parseInt(req.params.taskID);
     _db.none(`
       DELETE FROM tasks
-      WHERE task_id = $1
+      WHERE task_id = ($1)
       `, [tID])
       .then( task=>{
         console.log('Deleted Succesfully');

@@ -1,21 +1,26 @@
 'use strict'
 const express = require('express');
 const tasks = require('express').Router();
-const taskModel = require('../models/task')
+const DB = require('../models/task');
 
 // let taskArray = [];\
-// const sendJSONresp = (req,res)=>res.json()
+const sendJSONresp = (req,res)=>res.json(res.rows)
 
 
 tasks.route('/:taskID')
-    .get((req,res)=>res.send(`showed task ${req.params.id}`))
-    .put((req,res)=>res.send(`edited task ${req.params.id}`))
+    // .get(DB(req,res)=>res.send(`showed task ${req.params.id}`))
+    // .put((req,res)=>res.send(`edited task ${req.params.id}`))
+    .put(DB.updateTask, sendJSONresp)
     // used PUT to post a specific id
-    .delete((req,res)=>res.send(`deleted task ${req.params.id} `))
+    // .delete((req,res)=>res.send(`deleted task ${req.params.id} `))
+    .delete(DB.deleteTask, (req,res)=>res.send(req.params.taskID))
+
 
 tasks.route('/' )
-    .get((req,res)=>res.send('show tasks'))
-    .post((req,res)=>res.send('posted new task'))
+    // .get((req,res)=>res.send('show tasks'))
+    .get(DB.getTasks, sendJSONresp)
+    // .post((req,res)=>res.send('posted new task'))
+    .post(DB.addTask, sendJSONresp)
 
 
 module.exports = tasks ;

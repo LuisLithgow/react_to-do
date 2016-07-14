@@ -8,13 +8,15 @@ const express = require('express');
 const logger = require('morgan');
 const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 3009;
+const bodyParser = require('body-parser')
+const PORT = process.argv[2] || process.env.PORT || 3009;
 
-// const homeRoute = require('');
 const tasksRoute = require('./routes/tasks');
 
-// app.use(express.static(path.join(__dirname, 'dist')));
+// const homeRoute = require('');
 
+// app.use(express.static(path.join(__dirname, 'dist')));
+app.use(bodyParser.json())
 app.use(logger('dev'));
 
 app.get('/', (req, res)=>{
