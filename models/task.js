@@ -3,18 +3,18 @@ const pg = require('pg-promise')({
 // Initialization Options
 });
 const config = {
-host:       process.env.DB_HOST,
-port:       process.env.DB_PORT,
-database:   process.env.DB_NAME,
-user:       process.env.DB_USER,
-password:   process.env.DB_PASS,
+  host:      process.env.DB_HOST,
+  port:      process.env.DB_PORT,
+  database:  process.env.DB_NAME,
+  user:      process.env.DB_USER,
+  password:  process.env.DB_PASS,
 };
 
 const _db = pg(config);
 
 module.exports = {
   getTasks(req, res, next) {
-    _db.any("SELECT * FROM tasks;")
+    _db.any("SELECT * FROM tasks ;")
       .then( tasks=>{
         res.rows = tasks;
         next()
@@ -48,7 +48,7 @@ module.exports = {
   updateTask(req, res, next){
     // tID is invented here
     req.body.tID = Number.parseInt(req.params.taskID);
-    req.body.completed = !!req.body.conpleted;
+    req.body.completed = !!req.body.completed;
 
     _db.any(
       `UPDATE tasks SET
