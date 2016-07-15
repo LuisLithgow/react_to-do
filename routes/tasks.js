@@ -28,8 +28,6 @@ module.exports = tasks ;
 
 
 
-
-
 // tasks.get('/:id', (req,res)=>{
 //   res.send(`showed task ${req.params.id}`)
 // })
