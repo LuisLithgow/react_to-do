@@ -2,96 +2,99 @@
 const pg = require('pg-promise')({
 // Initialization Options
 });
+
 const config = {
-  host:      process.env.DB_HOST,
-  port:      process.env.DB_PORT,
-  database:  process.env.DB_NAME,
-  user:      process.env.DB_USER,
-  password:  process.env.DB_PASS,
+  host:       process.env.DB_HOST,
+  port:       process.env.DB_PORT,
+  database:   process.env.DB_NAME,
+  user:       process.env.DB_USER,
+  password:   process.env.DB_PASS,
 };
 
 const _db = pg(config);
 
 module.exports = {
+
+  /* GET /tasks */
   getTasks(req, res, next) {
-    _db.any("SELECT * FROM tasks ;")
+    _db.any("SELECT * from tasks;")
       .then( tasks=>{
         res.rows = tasks;
         next()
       })
-    .catch( error => {
-      console.log('Error: ', error)
-    })
-  },
+      .catch( error=>{
 
-// POST /tasks
-// Creates a new task, returns the newly created record
-  addTask(req, res, next) {
-    console.log('===', req.body)
-    _db.any(
-      `INSERT INTO
-      tasks(task_name, task_desc)
-      VALUES ($/name/, $/desc/)
-      returning *;`, req.body
-    )
-      .then( task=>{
-        console.log('Added tasks successfully');
-        res.rows = task;
-        next()
+        console.error('Error ', error);
+        throw error;
       })
-    .catch( error => {
-      console.log('Error in Adding Task: ', error);
-    })
   },
 
-  // PUT /tasks/:id
-  updateTask(req, res, next){
+  /* POST /tasks */
+  /* creates a new task, returns the newly created record */
+  addTask(req, res, next) {
+    console.log('===addTask===',req.body)
+    _db.one(
+      `INSERT INTO tasks (task_name, task_desc) VALUES ($1, $2) returning *;` ,
+      [ req.body.name , req.body.desc ]
+      )
+      .then( task=>{
+        console.log('ADDED TASK SUCCESSFUL');
+        res.rows = task;
+        next();
+      })
+      .catch(error=>{
+        console.error('ERROR in ADDING TASK!', error);
+        throw error;
+      })
+  },
+  /* PUT /tasks/:taskID */
+  updateTask(req, res, next) {
+
     // tID is invented here
     req.body.tID = Number.parseInt(req.params.taskID);
+
+
     req.body.completed = !!req.body.completed;
 
-    _db.any(
+    _db.one(
       `UPDATE tasks SET
-      task_name=$/name/,
-      task_desc=$/desc/,
-      completed=$/completed/
+      task_name = $/task_name/,
+      task_desc = $/task_desc/,
+      completed = $/completed/,
+      task_time_start = $/task_time_start/,
+      task_time_end = $/task_time_end/
       WHERE task_id = $/tID/
-      returning  * ; `,
+      returning *;  `,
       req.body)
-    .then( task=>{
-        console.log('Added Updated successfully');
-        res.rows = task;
-        next()
-      })
-    .catch( error => {
-      console.log('Error in Updating Task: ', error);
-    })
+
+      .then( task=>{
+          console.log('ADDED UPDATED SUCCESSFULLY');
+          res.rows = task;
+          next();
+        })
+        .catch(error=>{
+          console.error('ERROR in UPDATING TASK!', error);
+          throw error;
+        })
   },
 
-  // DELETE /tasks/:id
-  deleteTask(req,res,next) {
+  /* DELETE /tasks/:id */
+  deleteTask(req, res, next) {
     const tID = Number.parseInt(req.params.taskID);
+
     _db.none(`
       DELETE FROM tasks
-      WHERE task_id = ($1)
+      WHERE task_id = $1
       `, [tID])
-      .then( task=>{
-        console.log('Deleted Succesfully');
-        res.rows = task;
-        next()
+
+     .then( ()=>{
+        console.log('DELETE COMPLETED');
+        res.rows = tID;
+        next();
       })
-    .catch( error => {
-      console.log('Error in Deleting Task: ', error);
-    })
+      .catch(error=>{
+        console.error('ERROR in DELETING TASK!', error);
+        throw error;
+      })
   },
-
 }
-
-
-
-
-
-
-
-
-
