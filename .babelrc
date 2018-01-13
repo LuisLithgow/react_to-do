@@ -1,7 +1,14 @@
 {
+<<<<<<< HEAD
   "presets" : ["es2015", "react"],
   "compact" : true,
   "plugins": [
+=======
+  "presets" : ["es2015", "react", "stage-0"],
+  "compact" : true,
+  "plugins": [
+    ["transform-object-rest-spread"],
+>>>>>>> 8ce42861e8f70bc4b970770cae1b8471eaa4f5eb
     ["transform-strict-mode", {
       "strict": true
     }]
